@@ -46,11 +46,11 @@ public class CompterLesPrenomsParOrigine{
 		private IntWritable nombreDOrigines = new IntWritable(1);
 
 		public void map(LongWritable clef, Text valeur, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-			String ligne = valeur.toString();
-			String[] colonnes = ligne.split(";");
-			String[] origines = colonnes[2].trim().split(",");
-			this.nombreDOrigines.set(origines.length); 
-			output.collect(new Text(this.nombreDOrigines+ " origins"),unite);
+			String ligne = valeur.toString(); // on traite une ligne donnee
+			String[] colonnes = ligne.split(";"); // on recupere les colonne sen divisant la ligne par occurence de ;
+			String[] origines = colonnes[2].trim().split(","); // on prend la colonne des origine qui vient en troisieme place puis on elimine les effets de bord avec tirm et on divise selon les , s il ya plusieurs origines
+			this.nombreDOrigines.set(origines.length);  // on recupere le nombre d origine dans la ligne donnee
+			output.collect(new Text(this.nombreDOrigines+ " origins"),unite); // puis on envoie cde nombre avec le nombre 1 pour dire qu il y a une occurence de x origines
 		
 		}
 	}
@@ -59,9 +59,9 @@ public class CompterLesPrenomsParOrigine{
 		public void reduce(Text clef, Iterator<IntWritable> valeurs, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
 			int somme = 0;
 			while (valeurs.hasNext()) {
-				somme += valeurs.next().get();
+				somme += valeurs.next().get(); // on somme pour chaque valeur d x origines les 1 correspondants
 			}
-			output.collect(clef, new IntWritable(somme));
+			output.collect(clef, new IntWritable(somme)); // puis on donne en sortie les nombres d'origines avec le nombre de leur occurences
 		}
 	}
 }

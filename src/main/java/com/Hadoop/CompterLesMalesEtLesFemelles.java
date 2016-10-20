@@ -45,16 +45,16 @@ public class CompterLesMalesEtLesFemelles{
 		private static final Text mot = new Text("percentage des mâles");
 		private IntWritable estMale = new IntWritable(0);
 		public void map(LongWritable clef, Text valeur, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-			String ligne = valeur.toString();
-			String[] colonnes = ligne.split(";");
-			String[] genres = colonnes[1].split(",");
+			String ligne = valeur.toString(); // traiter la ligne du csv
+			String[] colonnes = ligne.split(";"); // on la divise en colonnes (delimitees par un ;)
+			String[] genres = colonnes[1].split(","); // on prend la deuxieme colonne qui contient le genre
 			for (int i=0; i<genres.length; i++){
 				int estMale = 0;
-				if (genres[i].trim().equals("m"))  {
+				if (genres[i].trim().equals("m"))  { // on choisit de considerer male des qu il y a un m dans la colonne de genres
 					estMale= 1;
 				}
 				this.estMale.set(estMale);
-				output.collect(mot, this.estMale);
+				output.collect(mot, this.estMale); // si le prenom est male on l ajoute avec un 1 sinon avec un 0
 			}
 
 		}
@@ -65,10 +65,10 @@ public class CompterLesMalesEtLesFemelles{
 			int males = 0;
 			int total = 0;
 			while (valeurs.hasNext()) {
-				males += valeurs.next().get();
-				total += 1; 
+				males += valeurs.next().get(); // on compte le nombre de males traites
+				total += 1;  // on compte le nombre de personnes traitees
 			}
-			output.collect(clef, new DoubleWritable((double)(males)/(double)(total)));
+			output.collect(clef, new DoubleWritable((double)(males)/(double)(total))); // on donne en sortie la proportion des males sur toute la population
 		}
 	}
 }

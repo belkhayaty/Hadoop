@@ -46,12 +46,12 @@ public class CompterLesOrigines{
 		private Text motACollecter = new Text();
 
 		public void map(LongWritable clef, Text valeur, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-			String ligne = valeur.toString();
-			String[] colonnes = ligne.split(";");
-			String[] origines = colonnes[2].split(",");
+			String ligne = valeur.toString();  // on traite une loigne donnee
+			String[] colonnes = ligne.split(";"); // on recupere les colonnes en divisant par les ;
+			String[] origines = colonnes[2].split(","); // puis on recupere la troisieme colonne pour gerer les origines et on prend chaque origine en divisant par ,
 			for (int i=0; i<origines.length; i++) {
-				this.motACollecter.set(origines[i].trim());
-				output.collect(this.motACollecter, unite);
+				this.motACollecter.set(origines[i].trim()); // trim pour eliminer les effets de bord
+				output.collect(this.motACollecter, unite); // on collecte l origine avec un 1
 			}
 		}
 	}
@@ -60,9 +60,9 @@ public class CompterLesOrigines{
 		public void reduce(Text clef, Iterator<IntWritable> valeurs, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
 			int somme = 0;
 			while (valeurs.hasNext()) {
-				somme += valeurs.next().get();
+				somme += valeurs.next().get(); // on somme les 1 pour chaque origine
 			}
-			output.collect(clef, new IntWritable(somme));
+			output.collect(clef, new IntWritable(somme)); // puis on donne en reponse le nombre d origines
 		}
 	}
 }
